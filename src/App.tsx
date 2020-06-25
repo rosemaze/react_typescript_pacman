@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import mousetrap from "mousetrap";
+import { Grid } from "./elements/Grid/Grid";
+import { Pacman } from "./elements/Pacman/Pacman";
+import { GameWrapper } from "./styles/GameWrapper.style";
+
+import { PacmanStore } from "./stores/Pacman.store";
+import { GameStore } from "./stores/Game.store";
+import { StoreContext } from "./hooks/useStores";
+
+// move
+export type ShortcutHandler = (
+  event: ExtendedKeyboardEvent,
+  combo: string
+) => any;
 
 function App() {
+  const pacmanStore = new PacmanStore();
+  const gameStore = new GameStore();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StoreContext.Provider
+      value={{ pacmanStore: pacmanStore, gameStore: gameStore }}
+    >
+      <GameWrapper>
+        <Grid />
+        <Pacman />
+      </GameWrapper>
+    </StoreContext.Provider>
   );
 }
 
