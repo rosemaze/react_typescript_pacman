@@ -6,6 +6,7 @@ interface Options {
   walls: number[][];
   marginUnit: number;
   borderRadiusUnit: number;
+  isWall: boolean;
 }
 
 export const getBordersAndMargins = ({
@@ -14,6 +15,7 @@ export const getBordersAndMargins = ({
   walls,
   marginUnit,
   borderRadiusUnit,
+  isWall,
 }: Options) => {
   let marginTop = 0,
     marginBottom = 0,
@@ -24,59 +26,94 @@ export const getBordersAndMargins = ({
     borderBottomLeftRadius = 0,
     borderBottomRightRadius = 0;
 
-  /*
-  const isNotTopWall = rowIndex > 0;
-  const isNotLeftWall = colIndex > 0;
-  const isNotBottomWall = rowIndex < walls.length - 1;
-  const isNotRightWall = colIndex < walls[rowIndex].length - 1;
-  const squareAbove = isNotTopWall ? walls[rowIndex - 1][colIndex] : undefined;
-  const squareToLeft = isNotLeftWall
-    ? walls[rowIndex][colIndex - 1]
+  const isNotTopEnclosure = rowIndex > 0;
+  const isNotLeftEnclosure = colIndex > 0;
+  const isNotBottomEnclosure = rowIndex < walls.length - 2;
+  const isNotRightEnclosure = colIndex < walls[rowIndex].length - 2;
+  const isNotAnyEnclosure =
+    isNotTopEnclosure &&
+    isNotLeftEnclosure &&
+    isNotBottomEnclosure &&
+    isNotRightEnclosure;
+
+  const squareAbove = isNotTopEnclosure
+    ? walls[rowIndex - 1][colIndex]
     : undefined;
-  const squareBelow = isNotBottomWall
+  const squareBelow = isNotBottomEnclosure
     ? walls[rowIndex + 1][colIndex]
     : undefined;
-  const squareToRight = isNotRightWall ? walls[rowIndex][colIndex + 1];
-*/
+  const squareToLeft = isNotLeftEnclosure
+    ? walls[rowIndex][colIndex - 1]
+    : undefined;
+  const squareToRight = isNotRightEnclosure
+    ? walls[rowIndex][colIndex + 1]
+    : undefined;
 
   /*
-  if (rowIndex > 0 && walls[rowIndex - 1][colIndex] != GridValues.WALL) {
-    marginTop = marginUnit;
-    if (colIndex > 0 && walls[rowIndex][colIndex - 1] != GridValues.WALL) {
-      borderBottomRightRadius = borderRadiusUnit;
-    } else if (
-      rowIndex < walls[rowIndex].length - 1 &&
-      walls[rowIndex][colIndex + 1] != 0
-    ) {
-      borderTopLeftRadius = borderRadiusUnit;
-    }
-  }
-  if (
-    rowIndex < walls.length - 1 &&
-    walls[rowIndex + 1][colIndex] != GridValues.WALL
-  ) {
-    marginBottom = marginUnit;
-    if (rowIndex > 0 && walls[rowIndex][colIndex - 1] != GridValues.WALL) {
-      borderBottomLeftRadius = borderRadiusUnit;
-    } else if (
-      rowIndex < walls[rowIndex].length - 1 &&
-      walls[rowIndex][colIndex + 1] != GridValues.WALL
-    ) {
-      borderBottomRightRadius = borderRadiusUnit;
-    }
-  }
+  console.log(rowIndex, colIndex);
+  const squareToAboveLeft = isNotAnyEnclosure
+    ? walls[rowIndex - 1][colIndex - 1]
+    : undefined;
+  const squareToAboveRight = isNotAnyEnclosure
+    ? walls[rowIndex + 1][colIndex - 1]
+    : undefined;
+  const squareToBelowLeft = isNotAnyEnclosure
+    ? walls[rowIndex - 1][colIndex + 1]
+    : undefined;
+  const squareToBelowRight = isNotAnyEnclosure
+    ? walls[rowIndex + 1][colIndex + 1]
+    : undefined;
+    */
 
-  if (colIndex > 0 && walls[rowIndex][colIndex - 1] != GridValues.WALL) {
-    marginLeft = marginUnit;
-  }
+  if (isWall) {
+    if (
+      squareAbove &&
+      [GridValues.DOT, GridValues.MAGIC_DOT, GridValues.NO_DOT].includes(
+        squareAbove
+      )
+    ) {
+      marginTop = marginUnit;
+    }
 
-  if (
-    colIndex < walls[rowIndex].length - 1 &&
-    walls[rowIndex][colIndex + 1] != GridValues.WALL
-  ) {
-    marginRight = marginUnit;
+    if (
+      squareBelow &&
+      [GridValues.DOT, GridValues.MAGIC_DOT, GridValues.NO_DOT].includes(
+        squareBelow
+      )
+    ) {
+      marginBottom = marginUnit;
+    }
+
+    if (
+      squareToLeft &&
+      [GridValues.DOT, GridValues.MAGIC_DOT, GridValues.NO_DOT].includes(
+        squareToLeft
+      )
+    ) {
+      marginLeft = marginUnit;
+    }
+
+    if (
+      squareToRight &&
+      [GridValues.DOT, GridValues.MAGIC_DOT, GridValues.NO_DOT].includes(
+        squareToRight
+      )
+    ) {
+      marginRight = marginUnit;
+    }
+
+    console.log(
+      "row",
+      rowIndex,
+      "col",
+      colIndex,
+      squareAbove,
+      squareToLeft,
+      walls[rowIndex][colIndex],
+      squareAbove && squareAbove === GridValues.WALL,
+      squareToLeft && squareToLeft === GridValues.WALL
+    );
   }
-  */
 
   const currentSquare = walls[rowIndex][colIndex];
 

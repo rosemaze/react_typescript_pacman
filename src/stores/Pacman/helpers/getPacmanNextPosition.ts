@@ -1,213 +1,107 @@
 import { Directions } from "../../Game/Game.types";
+import { paths, INTERVAL_MOVE } from "../../Game/Game.constants";
+import {
+  BRICK_MAGNITUDE,
+  GridValues,
+} from "../../../elements/Grid/Grid.constants";
 
+interface Options {
+  direction: Directions;
+  row: number;
+  col: number;
+  x: number;
+  y: number;
+  incrementValue: number;
+}
 
+interface PacmanNextPosition {
+  rowIndex: number;
+  colIndex: number;
+  x: number;
+  y: number;
+  canMove: boolean;
+  hasDot: boolean;
+  stepInterval: number;
+}
 
+export const getPacmanNextPosition = (options: Options) => {
+  const { direction, row, col, x, y, incrementValue } = options;
+  const nextPosition: PacmanNextPosition = {
+    rowIndex: row,
+    colIndex: col,
+    x,
+    y,
+    canMove: false,
+    hasDot: false,
+    stepInterval: INTERVAL_MOVE,
+  };
 
-export const getPacmanNextPosition = (options: {direction: Directions, row: number, col: number, x: number, y:number }) => {
-    const {direction, row, col, x, y} = options;
-    
-    switch (direction){
-        case Directions.Down:
-            movementObj.cssPos = "top";
-            
-            if (directionArray[row+1][col]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = row * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
+  switch (direction) {
+    case Directions.Down:
+      const squareBelow = paths[row + 1][col];
+      if (squareBelow === GridValues.WALL) {
+        nextPosition.y = row * BRICK_MAGNITUDE;
+        nextPosition.canMove = false;
+      } else {
+        // TODO: Add food info
+        /*
                 if (gJabbaArray[row+1][col]==1){
                     gCurrentMoveInterval = INTERVAL_MOVE;
                     // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
                     movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = y + DISTANCE_INCREMENT;
-                movementObj.row = row+1;
-                movementObj.column = col;
-            }
-            movementObj.y = movementObj.cssPosVal;
-            break;
-        case KEY_UP:
-            movementObj.cssPos = "top";
-            
-            if (directionArray[row-1][col]==0) { 
-                // There's a wall in this direction
-                movementObj.cssPosVal = row * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row-1][col]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = y - DISTANCE_INCREMENT;
-                movementObj.row = row-1;
-                movementObj.column = col;
-            }
-            movementObj.y = movementObj.cssPosVal;
-            break;
-        case KEY_LEFT:
-            movementObj.cssPos = "left";
-            
-            if (directionArray[row][col-1]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = col * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row][col-1]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = x - DISTANCE_INCREMENT;
-                movementObj.row = row;
-                movementObj.column = col-1;
-            }
-            movementObj.x = movementObj.cssPosVal;
-            break;
-        case KEY_RIGHT:
-            movementObj.cssPos = "left";
-            
-            if (directionArray[row][col+1]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = col * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row][col+1]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = x + DISTANCE_INCREMENT;
-                movementObj.row = row;
-                movementObj.column = col+1;
-            }
-            movementObj.x = movementObj.cssPosVal;
-            break;
-        default:
-            // do nothing
-            break;
-    }
-    
-}
+                } */
+        nextPosition.rowIndex = row + 1;
+        nextPosition.colIndex = col;
+        nextPosition.y = y + incrementValue;
+      }
+      break;
 
+    case Directions.Up:
+      const squareAbove = paths[row - 1][col];
 
+      if (squareAbove === GridValues.WALL) {
+        // There's a wall in this direction
+        nextPosition.y = row * BRICK_MAGNITUDE;
+        nextPosition.canMove = false;
+      } else {
+        nextPosition.rowIndex = row - 1;
+        nextPosition.colIndex = col;
+        nextPosition.y = y - incrementValue;
+      }
+      break;
 
-(dir, row, col, x, y){
-    // Returns movement object
-    var movementObj = {
-        canMove: true,
-        cssPosVal: 0,
-        cssPos: "lala",
-        row: 0,
-        column: 0,
-        x: 0,
-        y: 0
-    }
+    case Directions.Left:
+      const squareToTheLeft = paths[row][col - 1];
 
-    movementObj.y = y;
-    movementObj.x = x;
-    movementObj.row = row;
-    movementObj.column = col;
-    
-    gCurrentMoveInterval = INTERVAL_MOVE;
-        
-    switch (dir){
-        case KEY_DOWN:
-            movementObj.cssPos = "top";
-            
-            if (directionArray[row+1][col]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = row * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row+1][col]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = y + DISTANCE_INCREMENT;
-                movementObj.row = row+1;
-                movementObj.column = col;
-            }
-            movementObj.y = movementObj.cssPosVal;
-            break;
-        case KEY_UP:
-            movementObj.cssPos = "top";
-            
-            if (directionArray[row-1][col]==0) { 
-                // There's a wall in this direction
-                movementObj.cssPosVal = row * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row-1][col]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = y - DISTANCE_INCREMENT;
-                movementObj.row = row-1;
-                movementObj.column = col;
-            }
-            movementObj.y = movementObj.cssPosVal;
-            break;
-        case KEY_LEFT:
-            movementObj.cssPos = "left";
-            
-            if (directionArray[row][col-1]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = col * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row][col-1]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = x - DISTANCE_INCREMENT;
-                movementObj.row = row;
-                movementObj.column = col-1;
-            }
-            movementObj.x = movementObj.cssPosVal;
-            break;
-        case KEY_RIGHT:
-            movementObj.cssPos = "left";
-            
-            if (directionArray[row][col+1]==0) {
-                // There's a wall in this direction
-                movementObj.cssPosVal = col * WALL_INCREMENT;
-                movementObj.canMove = false;
-            }else{
-                // If the next square has food Pacman moves at normal speed
-                if (gJabbaArray[row][col+1]==1){
-                    gCurrentMoveInterval = INTERVAL_MOVE;
-                    // Tell the main caller that pacman is about to eat a dot so that the count can be updated to win the game
-                    movementObj.hasDot = true;
-                }
-                
-                movementObj.cssPosVal = x + DISTANCE_INCREMENT;
-                movementObj.row = row;
-                movementObj.column = col+1;
-            }
-            movementObj.x = movementObj.cssPosVal;
-            break;
-        default:
-            // do nothing
-            break;
-    }
-        
-    return movementObj;
-}
+      if (squareToTheLeft === GridValues.WALL) {
+        // There's a wall in this direction
+        nextPosition.x = col * BRICK_MAGNITUDE;
+        nextPosition.canMove = false;
+      } else {
+        nextPosition.rowIndex = row;
+        nextPosition.colIndex = col - 1;
+        nextPosition.x = x - incrementValue;
+      }
+      break;
+
+    case Directions.Right:
+      const squareToTheRight = paths[row][col + 1];
+
+      if (squareToTheRight === GridValues.WALL) {
+        // There's a wall in this direction
+        nextPosition.x = col * BRICK_MAGNITUDE;
+        nextPosition.canMove = false;
+      } else {
+        nextPosition.rowIndex = row;
+        nextPosition.colIndex = col + 1;
+        nextPosition.x = x + incrementValue;
+      }
+      break;
+
+    default:
+      // do nothing
+      break;
+  }
+
+  return nextPosition;
+};

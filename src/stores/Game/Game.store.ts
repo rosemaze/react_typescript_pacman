@@ -1,4 +1,7 @@
 import { observable, action } from "mobx";
+import { useStores } from "../../hooks/useStores";
+import { Directions } from "./Game.types";
+import { BaseStore } from "../Base/Base.store";
 
 export class GameStore {
   @observable
@@ -11,8 +14,14 @@ export class GameStore {
     console.log("setting isRunning", this.isRunning);
   };
 
+  baseStore: BaseStore;
+
+  constructor(baseStore: BaseStore) {
+    this.baseStore = baseStore;
+  }
+
   @action
   updateGameArea = () => {
-    movePacman();
+    this.baseStore.pacmanStore.movePacman();
   };
 }

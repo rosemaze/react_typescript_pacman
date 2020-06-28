@@ -1,7 +1,7 @@
 import { Sprite } from "./Pacman.types";
+import { Directions } from "../../stores/Game/Game.types";
 
-export const INTERVAL_MOVE = 130; //65; // milliseconds
-
+/*
 export const INITIAL_SETTINGS: Sprite = {
   isMoving: false,
   id: "pacmanDiv",
@@ -16,3 +16,4 @@ export const INITIAL_SETTINGS: Sprite = {
   y: 345,
   steps: 0,
 };
+*/

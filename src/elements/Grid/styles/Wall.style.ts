@@ -1,6 +1,9 @@
 import styled from "styled-components";
-
-const BRICK_MAGNITUDE = 15;
+import {
+  BRICK_MAGNITUDE,
+  PATH_OFFSET,
+  PATH_MAGNITUDE,
+} from "../Grid.constants";
 
 interface Props {
   marginLeft: number;
@@ -16,15 +19,31 @@ interface Props {
   isWall: boolean;
 }
 
+const getWidth = (marginLeft: number, marginRight: number, isWall: boolean) =>
+  isWall ? BRICK_MAGNITUDE - marginLeft - marginRight : PATH_MAGNITUDE;
+
+const getHeight = (marginTop: number, marginBottom: number, isWall: boolean) =>
+  isWall ? BRICK_MAGNITUDE - marginTop - marginBottom : PATH_MAGNITUDE;
+
+const getTop = (rowIndex: number, isWall: boolean) =>
+  isWall
+    ? rowIndex * BRICK_MAGNITUDE
+    : rowIndex * BRICK_MAGNITUDE - PATH_OFFSET;
+
+const getLeft = (colIndex: number, isWall: boolean) =>
+  isWall
+    ? colIndex * BRICK_MAGNITUDE
+    : colIndex * BRICK_MAGNITUDE - PATH_OFFSET;
+
 export const Wall = styled.div<Props>`
-  width: ${({ marginLeft, marginRight }) =>
-    BRICK_MAGNITUDE - marginLeft - marginRight}px;
-  height: ${({ marginTop, marginBottom }) =>
-    BRICK_MAGNITUDE - marginTop - marginBottom}px;
   position: absolute;
+  width: ${({ marginLeft, marginRight, isWall }) =>
+    getWidth(marginLeft, marginRight, isWall)}px;
+  height: ${({ marginTop, marginBottom, isWall }) =>
+    getHeight(marginTop, marginBottom, isWall)}px;
   background-color: ${({ isWall }) => (isWall ? "blue" : "black")};
-  top: ${({ rowIndex }) => rowIndex * BRICK_MAGNITUDE}px;
-  left: ${({ colIndex }) => colIndex * BRICK_MAGNITUDE}px;
+  top: ${({ rowIndex, isWall }) => getTop(rowIndex, isWall)}px;
+  left: ${({ colIndex, isWall }) => getLeft(colIndex, isWall)}px;
   margin-top: ${({ marginTop }) => marginTop}px;
   margin-bottom: ${({ marginBottom }) => marginBottom}px;
   margin-left: ${({ marginLeft }) => marginLeft}px;
@@ -36,4 +55,5 @@ export const Wall = styled.div<Props>`
     borderBottomLeftRadius}px;
   border-bottom-right-radius: ${({ borderBottomRightRadius }) =>
     borderBottomRightRadius}px;
+  z-index: ${({ isWall }) => (isWall ? 0 : 1000)};
 `;

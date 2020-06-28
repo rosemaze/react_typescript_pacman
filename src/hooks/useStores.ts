@@ -1,10 +1,8 @@
 import React from "react";
-import { PacmanStore } from "../stores/Pacman.store";
-import { GameStore } from "../stores/Game.store";
+import { BaseStore } from "../stores/Base/Base.store";
 
 export const StoreContext = React.createContext<{
-  pacmanStore: PacmanStore;
-  gameStore: GameStore;
+  baseStore: BaseStore;
 }>(undefined!);
 
 export const useStores = () => React.useContext(StoreContext);

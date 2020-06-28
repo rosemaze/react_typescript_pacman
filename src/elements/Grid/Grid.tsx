@@ -1,7 +1,6 @@
 import React from "react";
 import {
   GridValues,
-  paths,
   walls,
   BORDER_RADIUS,
   BORDER_MARGIN,
@@ -14,10 +13,19 @@ export const Grid: React.FC = () => {
 
   return (
     <>
-      {paths.map((row, rowIndex) => {
+      {walls.map((row, rowIndex) => {
         let isWall = false;
 
         return row.map((col, colIndex) => {
+          isWall = [
+            GridValues.WALL,
+            GridValues.WALL_BOTTOM_LEFT_BORDER,
+            GridValues.WALL_BOTTOM_RIGHT_BORDER,
+            GridValues.WALL_TOP_LEFT_BORDER,
+            GridValues.WALL_TOP_RIGHT_BORDER,
+          ].includes(col);
+
+          // Maybe move this a helper in the styled component
           const {
             marginTop,
             marginBottom,
@@ -33,9 +41,8 @@ export const Grid: React.FC = () => {
             walls,
             marginUnit: BORDER_MARGIN,
             borderRadiusUnit: BORDER_RADIUS,
+            isWall,
           });
-
-          isWall = col === GridValues.WALL;
 
           return (
             <Wall
@@ -51,7 +58,7 @@ export const Grid: React.FC = () => {
               borderBottomRightRadius={borderBottomRightRadius}
               isWall={isWall}
               key={`${colIndex}_${rowIndex}`}
-              id={`${colIndex}_${rowIndex}_top_${rowIndex * 15}_left_${
+              id={`col_${colIndex}_row_${rowIndex}_top_${rowIndex * 15}_left_${
                 colIndex * 15
               }`}
             />
