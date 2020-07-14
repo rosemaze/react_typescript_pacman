@@ -5,8 +5,8 @@ interface Props {
   y: number;
 }
 
-export const PacmanWrapper = styled.div<Props>`
-  background-color: yellow;
+export const GhostWrapper = styled.div<Props>`
+  background-color: red;
   background-size: 20px auto;
   background-image: url("../../../assets/pacman/pacman-stationary-left.png");
   height: 20px;

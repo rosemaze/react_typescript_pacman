@@ -1,12 +1,10 @@
-import { Directions } from "../../Game/Game.types";
+import { Direction } from "../../Game/Game.types";
 import { paths, INTERVAL_MOVE } from "../../Game/Game.constants";
-import {
-  BRICK_MAGNITUDE,
-  GridValues,
-} from "../../../elements/Grid/Grid.constants";
+import { GridValues } from "../../../elements/Grid/Grid.constants";
+import { BRICK_MAGNITUDE } from "../../../elements/Grid/features/GridUnit/styles/Wall.style";
 
 interface Options {
-  direction: Directions;
+  direction: Direction;
   row: number;
   col: number;
   x: number;
@@ -14,7 +12,7 @@ interface Options {
   incrementValue: number;
 }
 
-interface PacmanNextPosition {
+export interface PacmanNextPosition {
   rowIndex: number;
   colIndex: number;
   x: number;
@@ -31,13 +29,13 @@ export const getPacmanNextPosition = (options: Options) => {
     colIndex: col,
     x,
     y,
-    canMove: false,
+    canMove: true,
     hasDot: false,
     stepInterval: INTERVAL_MOVE,
   };
 
   switch (direction) {
-    case Directions.Down:
+    case Direction.Down:
       const squareBelow = paths[row + 1][col];
       if (squareBelow === GridValues.WALL) {
         nextPosition.y = row * BRICK_MAGNITUDE;
@@ -56,7 +54,7 @@ export const getPacmanNextPosition = (options: Options) => {
       }
       break;
 
-    case Directions.Up:
+    case Direction.Up:
       const squareAbove = paths[row - 1][col];
 
       if (squareAbove === GridValues.WALL) {
@@ -70,7 +68,7 @@ export const getPacmanNextPosition = (options: Options) => {
       }
       break;
 
-    case Directions.Left:
+    case Direction.Left:
       const squareToTheLeft = paths[row][col - 1];
 
       if (squareToTheLeft === GridValues.WALL) {
@@ -84,7 +82,7 @@ export const getPacmanNextPosition = (options: Options) => {
       }
       break;
 
-    case Directions.Right:
+    case Direction.Right:
       const squareToTheRight = paths[row][col + 1];
 
       if (squareToTheRight === GridValues.WALL) {

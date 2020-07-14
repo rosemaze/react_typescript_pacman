@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import {
-  BRICK_MAGNITUDE,
-  PATH_OFFSET,
-  PATH_MAGNITUDE,
-} from "../Grid.constants";
+
+export const BRICK_MAGNITUDE = 15;
+export const BORDER_MARGIN = 5;
+export const BORDER_RADIUS = 7;
+export const PATH_OFFSET = 5;
+export const PATH_MAGNITUDE = 25;
 
 interface Props {
   marginLeft: number;

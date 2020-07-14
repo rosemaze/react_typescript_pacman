@@ -1,5 +1,5 @@
 import { observable, action } from "mobx";
-import { Directions } from "../Game/Game.types";
+import { Direction } from "../Game/Game.types";
 import { INCREMENT_MOVE } from "./Pacman.constants";
 import { getPacmanNextPosition } from "./helpers/getPacmanNextPosition";
 import { BaseStore } from "../Base/Base.store";
@@ -18,8 +18,12 @@ export class PacmanStore {
   column: number = 14;
 
   @observable
-  direction: Directions = Directions.Left;
+  direction: Direction = Direction.Left;
 
+  @observable
+  previousDirection: Direction = Direction.Left;
+
+  @observable
   baseStore: BaseStore;
 
   constructor(baseStore: BaseStore) {
@@ -28,15 +32,7 @@ export class PacmanStore {
 
   @action
   movePacman = () => {
-    const {
-      x,
-      y,
-      rowIndex,
-      colIndex,
-      canMove,
-      hasDot,
-      stepInterval,
-    } = getPacmanNextPosition({
+    let nextPosition = getPacmanNextPosition({
       row: this.row,
       col: this.column,
       x: this.x,
@@ -45,6 +41,26 @@ export class PacmanStore {
       incrementValue: INCREMENT_MOVE,
     });
 
+    // If user moves against a wall, make pacman
+    // continue in previous (currently moving) direction
+    if (!nextPosition.canMove) {
+      this.setDirection(this.previousDirection);
+
+      nextPosition = getPacmanNextPosition({
+        row: this.row,
+        col: this.column,
+        x: this.x,
+        y: this.y,
+        direction: this.direction,
+        incrementValue: INCREMENT_MOVE,
+      });
+    }
+
+    const { x, y, rowIndex, colIndex } = nextPosition;
+
+    // Warning: this might be updating asynchronously ?
+    this.setPreviousDirection(this.direction);
+
     this.x = x;
     this.y = y;
     this.row = rowIndex;
@@ -52,7 +68,12 @@ export class PacmanStore {
   };
 
   @action
-  setDirection = (direction: Directions) => {
+  setDirection = (direction: Direction) => {
     this.direction = direction;
+  };
+
+  @action
+  setPreviousDirection = (direction: Direction) => {
+    this.previousDirection = direction;
   };
 }

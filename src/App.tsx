@@ -1,6 +1,7 @@
 import React from "react";
 import mousetrap from "mousetrap";
 import { Grid } from "./elements/Grid/Grid";
+import { Ghost } from "./elements/Ghost/Ghost";
 import { Pacman } from "./elements/Pacman/Pacman";
 import { GameWrapper } from "./styles/GameWrapper.style";
 
@@ -17,12 +18,16 @@ export type ShortcutHandler = (
 
 function App() {
   const baseStore = new BaseStore();
+  const {
+    ghostsStore: { ghostRed },
+  } = baseStore;
 
   return (
     <StoreContext.Provider value={{ baseStore }}>
       <GameWrapper>
         <Grid />
         <Pacman />
+        <Ghost ghost={ghostRed} />
       </GameWrapper>
     </StoreContext.Provider>
   );

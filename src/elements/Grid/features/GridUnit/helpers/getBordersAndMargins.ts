@@ -1,9 +1,9 @@
-import { GridValues } from "../Grid.constants";
+import { GridValues, GRID } from "../../../Grid.constants";
 
 interface Options {
   rowIndex: number;
   colIndex: number;
-  walls: number[][];
+  grid: number[][];
   marginUnit: number;
   borderRadiusUnit: number;
   isWall: boolean;
@@ -12,7 +12,7 @@ interface Options {
 export const getBordersAndMargins = ({
   rowIndex,
   colIndex,
-  walls,
+  grid,
   marginUnit,
   borderRadiusUnit,
   isWall,
@@ -28,42 +28,21 @@ export const getBordersAndMargins = ({
 
   const isNotTopEnclosure = rowIndex > 0;
   const isNotLeftEnclosure = colIndex > 0;
-  const isNotBottomEnclosure = rowIndex < walls.length - 2;
-  const isNotRightEnclosure = colIndex < walls[rowIndex].length - 2;
-  const isNotAnyEnclosure =
-    isNotTopEnclosure &&
-    isNotLeftEnclosure &&
-    isNotBottomEnclosure &&
-    isNotRightEnclosure;
+  const isNotBottomEnclosure = rowIndex < grid.length - 2;
+  const isNotRightEnclosure = colIndex < grid[rowIndex].length - 2;
 
   const squareAbove = isNotTopEnclosure
-    ? walls[rowIndex - 1][colIndex]
+    ? grid[rowIndex - 1][colIndex]
     : undefined;
   const squareBelow = isNotBottomEnclosure
-    ? walls[rowIndex + 1][colIndex]
+    ? grid[rowIndex + 1][colIndex]
     : undefined;
   const squareToLeft = isNotLeftEnclosure
-    ? walls[rowIndex][colIndex - 1]
+    ? grid[rowIndex][colIndex - 1]
     : undefined;
   const squareToRight = isNotRightEnclosure
-    ? walls[rowIndex][colIndex + 1]
+    ? grid[rowIndex][colIndex + 1]
     : undefined;
-
-  /*
-  console.log(rowIndex, colIndex);
-  const squareToAboveLeft = isNotAnyEnclosure
-    ? walls[rowIndex - 1][colIndex - 1]
-    : undefined;
-  const squareToAboveRight = isNotAnyEnclosure
-    ? walls[rowIndex + 1][colIndex - 1]
-    : undefined;
-  const squareToBelowLeft = isNotAnyEnclosure
-    ? walls[rowIndex - 1][colIndex + 1]
-    : undefined;
-  const squareToBelowRight = isNotAnyEnclosure
-    ? walls[rowIndex + 1][colIndex + 1]
-    : undefined;
-    */
 
   if (isWall) {
     if (
@@ -101,21 +80,9 @@ export const getBordersAndMargins = ({
     ) {
       marginRight = marginUnit;
     }
-
-    console.log(
-      "row",
-      rowIndex,
-      "col",
-      colIndex,
-      squareAbove,
-      squareToLeft,
-      walls[rowIndex][colIndex],
-      squareAbove && squareAbove === GridValues.WALL,
-      squareToLeft && squareToLeft === GridValues.WALL
-    );
   }
 
-  const currentSquare = walls[rowIndex][colIndex];
+  const currentSquare = GRID[rowIndex][colIndex];
 
   switch (currentSquare) {
     case GridValues.WALL_TOP_LEFT_BORDER:

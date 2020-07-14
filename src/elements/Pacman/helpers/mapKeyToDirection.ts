@@ -1,15 +1,15 @@
-import { Directions } from "../../../stores/Game/Game.types";
+import { Direction } from "../../../stores/Game/Game.types";
 
 export const mapKeyToDirection = (key: string) => {
   switch (key) {
     case "ArrowLeft":
-      return Directions.Left;
+      return Direction.Left;
     case "ArrowRight":
-      return Directions.Right;
+      return Direction.Right;
     case "ArrowDown":
-      return Directions.Down;
+      return Direction.Down;
     case "ArrowUp":
-      return Directions.Up;
+      return Direction.Up;
     default:
       return undefined;
   }

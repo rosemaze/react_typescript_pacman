@@ -9,14 +9,7 @@ export enum GridValues {
   WALL_BOTTOM_LEFT_BORDER = -5,
 }
 
-
-export const BRICK_MAGNITUDE = 15;
-export const BORDER_MARGIN = 5;
-export const BORDER_RADIUS = 7;
-export const PATH_OFFSET = 5;
-export const PATH_MAGNITUDE = 25;
-
-export const walls = 
+export const GRID = 
 [[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], // 0
 [ 0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0], // 1
 [ 0,  1, -2,  0,  0, -3,  1, -2,  0,  0,  0, -3,  1,  0,  0,  1, -2,  0,  0,  0, -3,  1, -2,  0,  0, -3,  1,  0], // 2
