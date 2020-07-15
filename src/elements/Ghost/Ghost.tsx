@@ -10,7 +10,7 @@ interface Props {
 export const GhostComponent: React.FC<Props> = (props) => {
   const { ghost } = props;
 
-  return <GhostWrapper x={ghost.x} y={ghost.y} />;
+  return <GhostWrapper x={ghost.x} y={ghost.y} ghostColor={ghost.color} />;
 };
 
 export const Ghost = reactive(GhostComponent);

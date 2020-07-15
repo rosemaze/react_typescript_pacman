@@ -1,5 +1,6 @@
 import { observable, computed } from "mobx";
 import { Direction } from "../../Game/Game.types";
+import { GhostColor } from "../Ghosts.types";
 
 export class Ghost {
   @observable
@@ -16,6 +17,12 @@ export class Ghost {
 
   @observable
   direction: Direction = Direction.Up;
+
+  color: GhostColor;
+
+  constructor(ghostColor: GhostColor) {
+    this.color = ghostColor;
+  }
 
   @computed
   get isGoingThroughEndOfLeftTunnel() {

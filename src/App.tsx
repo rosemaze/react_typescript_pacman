@@ -19,7 +19,7 @@ export type ShortcutHandler = (
 function App() {
   const baseStore = new BaseStore();
   const {
-    ghostsStore: { ghostRed },
+    ghostsStore: { ghostRed, ghostPink, ghostBlue, ghostOrange },
   } = baseStore;
 
   return (
@@ -28,6 +28,9 @@ function App() {
         <Grid />
         <Pacman />
         <Ghost ghost={ghostRed} />
+        <Ghost ghost={ghostPink} />
+        <Ghost ghost={ghostBlue} />
+        <Ghost ghost={ghostOrange} />
       </GameWrapper>
     </StoreContext.Provider>
   );

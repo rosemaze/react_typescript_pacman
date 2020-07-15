@@ -31,12 +31,15 @@ export class GameStore {
   updateGameArea = () => {
     const {
       pacmanStore: { movePacman },
-      ghostsStore: { moveGhost, ghostRed },
+      ghostsStore: { moveGhost, ghostRed, ghostPink, ghostBlue, ghostOrange },
     } = this.baseStore;
 
     movePacman();
 
     moveGhost(ghostRed);
+    moveGhost(ghostPink);
+    moveGhost(ghostBlue);
+    moveGhost(ghostOrange);
 
     // THIS IS SLOW CUZ IT RENDERS THE ENTIRE PATH MAP
     const { row, column } = this.baseStore.pacmanStore;

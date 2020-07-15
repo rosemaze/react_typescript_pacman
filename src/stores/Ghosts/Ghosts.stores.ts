@@ -5,6 +5,7 @@ import { getRandomDirection } from "./helpers/getRandomDirection";
 import { DIRECTIONS_GRID } from "../Game/Game.constants";
 import { Direction } from "../Game/Game.types";
 import { GHOST_STEP_INCREMENT } from "./Ghosts.constants";
+import { GhostColor } from "./Ghosts.types";
 
 export class GhostsStore {
   @observable
@@ -14,12 +15,20 @@ export class GhostsStore {
   ghostPink: Ghost;
 
   @observable
+  ghostBlue: Ghost;
+
+  @observable
+  ghostOrange: Ghost;
+
+  @observable
   baseStore: BaseStore;
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
-    this.ghostRed = new Ghost();
-    this.ghostPink = new Ghost();
+    this.ghostRed = new Ghost(GhostColor.Red);
+    this.ghostPink = new Ghost(GhostColor.Pink);
+    this.ghostBlue = new Ghost(GhostColor.Blue);
+    this.ghostOrange = new Ghost(GhostColor.Orange);
   }
 
   @action

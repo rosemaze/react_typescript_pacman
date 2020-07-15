@@ -1,1 +1,1 @@
-export const INCREMENT_MOVE = 15; 
+export const PACMAN_STEP_INCREMENT = 15;
