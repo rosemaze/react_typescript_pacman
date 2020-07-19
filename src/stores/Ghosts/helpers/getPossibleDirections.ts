@@ -1,5 +1,5 @@
 import { POSSIBLE_DIRECTIONS } from "../../Game/Game.constants";
-import { Direction } from "../../Game/Game.types";
+import { Direction } from "../../../App.types";
 
 export const getPossibleDirections = (options: {
   row: number;
@@ -57,6 +57,5 @@ export const getPossibleDirections = (options: {
 
     default:
       throw Error("error: no possible direction");
-      return [];
   }
 };

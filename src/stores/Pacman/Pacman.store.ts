@@ -1,8 +1,9 @@
 import { observable, action, computed } from "mobx";
-import { Direction } from "../Game/Game.types";
+import { Direction } from "../../App.types";
 import { PACMAN_STEP_INCREMENT } from "./Pacman.constants";
 import { getPacmanNextPosition } from "./helpers/getPacmanNextPosition";
 import { BaseStore } from "../Base/Base.store";
+import { Pacman } from "./Pacman.types";
 
 export class PacmanStore {
   @observable
@@ -26,9 +27,21 @@ export class PacmanStore {
   @observable
   baseStore: BaseStore;
 
-  constructor(baseStore: BaseStore) {
+  constructor(baseStore: BaseStore, initialData: Pacman) {
     this.baseStore = baseStore;
+
+    this.setInitialData(initialData);
   }
+
+  @action
+  setInitialData = (initialData: Pacman) => {
+    this.x = initialData.x;
+    this.y = initialData.y;
+    this.column = initialData.column;
+    this.row = initialData.row;
+    this.direction = initialData.direction;
+    this.previousDirection = initialData.previousDirection;
+  };
 
   @action
   movePacman = () => {

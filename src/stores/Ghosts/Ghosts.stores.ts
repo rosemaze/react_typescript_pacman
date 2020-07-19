@@ -1,51 +1,56 @@
-import { observable, action, computed } from "mobx";
-import { Ghost } from "./models/Ghost.model";
+import { observable, action } from "mobx";
+import { GhostStore } from "./models/Ghost.model";
 import { BaseStore } from "../Base/Base.store";
-import { getRandomDirection } from "./helpers/getRandomDirection";
+import { getRandomPossibleDirection } from "./helpers/getRandomPossibleDirection";
 import { DIRECTIONS_GRID } from "../Game/Game.constants";
-import { Direction } from "../Game/Game.types";
-import { GHOST_STEP_INCREMENT } from "./Ghosts.constants";
-import { GhostColor } from "./Ghosts.types";
+import { Direction } from "../../App.types";
+import {
+  GHOST_STEP_INCREMENT,
+  GHOST_INITIAL_DATA,
+} from "./models/Ghost.constants";
+import { GhostColor } from "./models/Ghost.types";
 
 export class GhostsStore {
   @observable
-  ghostRed: Ghost;
+  ghostRed: GhostStore;
 
   @observable
-  ghostPink: Ghost;
+  ghostPink: GhostStore;
 
   @observable
-  ghostBlue: Ghost;
+  ghostBlue: GhostStore;
 
   @observable
-  ghostOrange: Ghost;
+  ghostOrange: GhostStore;
 
   @observable
   baseStore: BaseStore;
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
-    this.ghostRed = new Ghost(GhostColor.Red);
-    this.ghostPink = new Ghost(GhostColor.Pink);
-    this.ghostBlue = new Ghost(GhostColor.Blue);
-    this.ghostOrange = new Ghost(GhostColor.Orange);
+    this.ghostRed = new GhostStore(GhostColor.Red, GHOST_INITIAL_DATA);
+    this.ghostPink = new GhostStore(GhostColor.Pink, GHOST_INITIAL_DATA);
+    this.ghostBlue = new GhostStore(GhostColor.Blue, GHOST_INITIAL_DATA);
+    this.ghostOrange = new GhostStore(GhostColor.Orange, GHOST_INITIAL_DATA);
   }
 
   @action
-  moveGhost = (ghost: Ghost) => {
+  moveGhost = (ghost: GhostStore) => {
     if (ghost.isGoingThroughEndOfLeftTunnel) {
       ghost.column = 27;
       ghost.x = ghost.column * GHOST_STEP_INCREMENT;
+      console.log("going thru left tunnel");
       return;
     }
 
     if (ghost.isGoingThroughEndOfRightTunnel) {
       ghost.column = 0;
       ghost.x = ghost.column * GHOST_STEP_INCREMENT;
+      console.log("going thru right tunnel");
       return;
     }
 
-    const direction = getRandomDirection({
+    const direction = getRandomPossibleDirection({
       col: ghost.column,
       row: ghost.row,
       currentDirection: ghost.direction,
@@ -75,7 +80,7 @@ export class GhostsStore {
   };
 
   @action
-  setDirection = (ghost: Ghost, direction: Direction) => {
+  setDirection = (ghost: GhostStore, direction: Direction) => {
     ghost.direction = direction;
   };
 }

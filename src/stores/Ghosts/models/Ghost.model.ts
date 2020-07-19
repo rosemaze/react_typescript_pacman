@@ -1,8 +1,8 @@
-import { observable, computed } from "mobx";
-import { Direction } from "../../Game/Game.types";
-import { GhostColor } from "../Ghosts.types";
+import { observable, computed, action } from "mobx";
+import { Direction } from "../../../App.types";
+import { GhostColor, GhostMode, Ghost } from "./Ghost.types";
 
-export class Ghost {
+export class GhostStore {
   @observable
   x: number = 195;
 
@@ -18,11 +18,31 @@ export class Ghost {
   @observable
   direction: Direction = Direction.Up;
 
+  @observable
+  mode: GhostMode = GhostMode.Normal;
+
   color: GhostColor;
 
-  constructor(ghostColor: GhostColor) {
-    this.color = ghostColor;
+  @observable
+  releaseTimeout?: number = undefined;
+
+  constructor(color: GhostColor, initialData: Ghost) {
+    this.color = color;
+
+    this.setInitialData(initialData);
   }
+
+  @action
+  setInitialData = (initialData: Ghost) => {
+    this.x = initialData.x;
+    this.y = initialData.y;
+    this.row = initialData.row;
+    this.column = initialData.column;
+    this.direction = initialData.direction;
+    this.mode = initialData.mode;
+
+    this.releaseTimeout = undefined;
+  };
 
   @computed
   get isGoingThroughEndOfLeftTunnel() {
@@ -39,4 +59,9 @@ export class Ghost {
       this.direction === Direction.Right
     );
   }
+
+  @action
+  setMode = (mode: GhostMode) => {
+    this.mode = mode;
+  };
 }

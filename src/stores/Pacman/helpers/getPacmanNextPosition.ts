@@ -1,7 +1,6 @@
-import { Direction } from "../../Game/Game.types";
-import { paths, INTERVAL_MOVE } from "../../Game/Game.constants";
+import { Direction } from "../../../App.types";
+import { paths } from "../../Game/Game.constants";
 import { GridValues } from "../../../elements/Grid/Grid.constants";
-import { BRICK_MAGNITUDE } from "../../../elements/Grid/features/GridUnit/styles/Wall.style";
 
 interface Options {
   direction: Direction;
@@ -13,32 +12,28 @@ interface Options {
 }
 
 export interface PacmanNextPosition {
+  canMove: boolean;
   rowIndex: number;
   colIndex: number;
   x: number;
   y: number;
-  canMove: boolean;
-  hasDot: boolean;
-  stepInterval: number;
 }
 
 export const getPacmanNextPosition = (options: Options) => {
   const { direction, row, col, x, y, incrementValue } = options;
   const nextPosition: PacmanNextPosition = {
+    canMove: true,
     rowIndex: row,
     colIndex: col,
     x,
     y,
-    canMove: true,
-    hasDot: false,
-    stepInterval: INTERVAL_MOVE,
   };
 
   switch (direction) {
     case Direction.Down:
       const squareBelow = paths[row + 1][col];
       if (squareBelow === GridValues.WALL) {
-        nextPosition.y = row * BRICK_MAGNITUDE;
+        // nextPosition.y = row * BRICK_MAGNITUDE;
         nextPosition.canMove = false;
       } else {
         // TODO: Add food info
@@ -59,7 +54,7 @@ export const getPacmanNextPosition = (options: Options) => {
 
       if (squareAbove === GridValues.WALL) {
         // There's a wall in this direction
-        nextPosition.y = row * BRICK_MAGNITUDE;
+        // nextPosition.y = row * BRICK_MAGNITUDE;
         nextPosition.canMove = false;
       } else {
         nextPosition.rowIndex = row - 1;
@@ -73,7 +68,7 @@ export const getPacmanNextPosition = (options: Options) => {
 
       if (squareToTheLeft === GridValues.WALL) {
         // There's a wall in this direction
-        nextPosition.x = col * BRICK_MAGNITUDE;
+        // nextPosition.x = col * BRICK_MAGNITUDE;
         nextPosition.canMove = false;
       } else {
         nextPosition.rowIndex = row;
@@ -87,7 +82,7 @@ export const getPacmanNextPosition = (options: Options) => {
 
       if (squareToTheRight === GridValues.WALL) {
         // There's a wall in this direction
-        nextPosition.x = col * BRICK_MAGNITUDE;
+        // nextPosition.x = col * BRICK_MAGNITUDE;
         nextPosition.canMove = false;
       } else {
         nextPosition.rowIndex = row;

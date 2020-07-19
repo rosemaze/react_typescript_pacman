@@ -1,4 +1,4 @@
-import { Direction } from "../../Game/Game.types";
+import { Direction } from "../../../App.types";
 
 export const getOppositeDirection = (direction: Direction) => {
   switch (direction) {

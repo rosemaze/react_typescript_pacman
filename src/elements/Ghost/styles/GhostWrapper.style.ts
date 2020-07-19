@@ -1,13 +1,21 @@
 import styled from "styled-components";
-import { GhostColor } from "../../../stores/Ghosts/Ghosts.types";
+import {
+  GhostColor,
+  GhostMode,
+} from "../../../stores/Ghosts/models/Ghost.types";
 
 interface Props {
   x: number;
   y: number;
   ghostColor: GhostColor;
+  ghostMode: GhostMode;
 }
 
-const getColor = (ghostColor: GhostColor) => {
+const getColor = (ghostColor: GhostColor, ghostMode: GhostMode) => {
+  if (ghostMode === GhostMode.Evasive) {
+    return "blue";
+  }
+
   switch (ghostColor) {
     case GhostColor.Red:
       return "red";
@@ -21,7 +29,8 @@ const getColor = (ghostColor: GhostColor) => {
 };
 
 export const GhostWrapper = styled.div<Props>`
-  background-color: ${({ ghostColor }) => getColor(ghostColor)};
+  background-color: ${({ ghostColor, ghostMode }) =>
+    getColor(ghostColor, ghostMode)};
   background-size: 20px auto;
   background-image: url("../../../assets/pacman/pacman-stationary-left.png");
   height: 20px;

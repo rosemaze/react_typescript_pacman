@@ -1,4 +1,4 @@
-import { Direction } from "../../../stores/Game/Game.types";
+import { Direction } from "../App.types";
 
 export const mapKeyToDirection = (key: string) => {
   switch (key) {

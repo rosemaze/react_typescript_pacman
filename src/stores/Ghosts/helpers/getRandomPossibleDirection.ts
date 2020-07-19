@@ -1,8 +1,8 @@
 import { getOppositeDirection } from "./getOppositeDirection";
 import { getPossibleDirections } from "./getPossibleDirections";
-import { Direction } from "../../Game/Game.types";
+import { Direction } from "../../../App.types";
 
-export const getRandomDirection = (options: {
+export const getRandomPossibleDirection = (options: {
   row: number;
   col: number;
   currentDirection: Direction;

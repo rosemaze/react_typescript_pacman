@@ -1,16 +1,23 @@
 import React from "react";
 import { GhostWrapper } from "./styles/GhostWrapper.style";
 import { reactive } from "../../helpers/reactive";
-import { Ghost as GhostModel } from "../../stores/Ghosts/models/Ghost.model";
+import { GhostStore } from "../../stores/Ghosts/models/Ghost.model";
 
 interface Props {
-  ghost: GhostModel;
+  ghost: GhostStore;
 }
 
 export const GhostComponent: React.FC<Props> = (props) => {
   const { ghost } = props;
 
-  return <GhostWrapper x={ghost.x} y={ghost.y} ghostColor={ghost.color} />;
+  return (
+    <GhostWrapper
+      x={ghost.x}
+      y={ghost.y}
+      ghostColor={ghost.color}
+      ghostMode={ghost.mode}
+    />
+  );
 };
 
 export const Ghost = reactive(GhostComponent);

@@ -1,11 +1,10 @@
 import React from "react";
-import { Dot } from "./styles/Dot.style";
+// import { Dot } from "./styles/Dot.style";
 import { Wall, BORDER_MARGIN, BORDER_RADIUS } from "./styles/Wall.style";
 import { getBordersAndMargins } from "./helpers/getBordersAndMargins";
 import { GRID } from "../../Grid.constants";
 import { useStores } from "../../../../hooks/useStores";
 import { reactive } from "../../../../helpers/reactive";
-import { ExecFileOptionsWithStringEncoding } from "child_process";
 
 enum DotState {
   Eaten = "eaten",
