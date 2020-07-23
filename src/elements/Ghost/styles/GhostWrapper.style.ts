@@ -16,6 +16,14 @@ const getColor = (ghostColor: GhostColor, ghostMode: GhostMode) => {
     return "blue";
   }
 
+  if (ghostMode === GhostMode.Blinking) {
+    return "white";
+  }
+
+  if (ghostMode === GhostMode.Homing) {
+    return "grey";
+  }
+
   switch (ghostColor) {
     case GhostColor.Red:
       return "red";

@@ -2,6 +2,7 @@ import { observable, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import { BaseStore } from "../Base/Base.store";
 import { getGridId } from "./helpers/getGridId";
+import { getHasPacmanEatenAMagicDot } from "./helpers/getHasPacmanEatenAMagicDot";
 import { getIsGhostAndPacmanInContact } from "./helpers/getIsGhostAndPacmanInContact";
 import { GhostStore } from "../Ghosts/models/Ghost.model";
 import {
@@ -9,11 +10,14 @@ import {
   PACMAN_INITIAL_DATA,
 } from "../Pacman/Pacman.constants";
 import { GhostMode } from "../Ghosts/models/Ghost.types";
-import { GAME_UPDATE_RATE } from "./Game.constants";
 import {
-  GHOST_STEP_INCREMENT,
-  GHOST_INITIAL_DATA,
-} from "../Ghosts/models/Ghost.constants";
+  GAME_UPDATE_RATE,
+  DURATION_GHOST_EVASIVE,
+  DURATION_GHOST_BLINKING,
+} from "./Game.constants";
+import { GHOST_INITIAL_DATA } from "../Ghosts/models/Ghost.constants";
+import { GRID } from "../../elements/Grid/Grid.constants";
+import { GameTimeouts } from "./Game.types";
 
 export class GameStore {
   @observable
@@ -35,7 +39,7 @@ export class GameStore {
   releasedGhosts = observable.array<GhostStore>();
 
   @observable
-  gameTimeout?: number; // Use to set game to next round
+  gameTimeout?: number; // Use to set game to next round, set timer for ghosts in evasive mode
 
   baseStore: BaseStore;
 
@@ -78,6 +82,41 @@ export class GameStore {
   };
 
   @action
+  setGameTimeout = (timeoutReason: GameTimeouts) => {
+    switch (timeoutReason) {
+      case GameTimeouts.StartNextLife:
+        // Wait two seconds, then set running flag to false, this will allow the key handler to start the next life
+        this.gameTimeout = setTimeout(() => this.setIsRunning(false), 2000);
+        break;
+
+      case GameTimeouts.EnterBlinkingMode:
+        // Set ghosts to blinking once evasive duration is up, set timer for ghosts to exit evasive mode altogether
+        this.gameTimeout = setTimeout(() => {
+          console.log("hey");
+          this.setAllReleasedGhostsMode(GhostMode.Blinking);
+          this.setGameTimeout(GameTimeouts.ExitEvasiveMode);
+        }, DURATION_GHOST_EVASIVE);
+        break;
+
+      case GameTimeouts.ExitEvasiveMode:
+        // Set ghosts to normal once blinking duration is up
+        this.gameTimeout = setTimeout(
+          () => this.setAllReleasedGhostsMode(GhostMode.Normal),
+          DURATION_GHOST_BLINKING
+        );
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  @action
+  setAllReleasedGhostsMode(mode: GhostMode) {
+    this.releasedGhosts.forEach((ghost) => ghost.setMode(mode));
+  }
+
+  @action
   setUpdateGameInterval = () => {
     this.updateGameInterval = setInterval(this.updateGame, GAME_UPDATE_RATE);
   };
@@ -85,12 +124,33 @@ export class GameStore {
   @action
   updateGame = () => {
     const {
-      pacmanStore: { movePacman, x: pacmanX, y: pacmanY },
+      pacmanStore: {
+        movePacman,
+        x: pacmanX,
+        y: pacmanY,
+        row: pacmanRow,
+        column: pacmanCol,
+      },
       ghostsStore: { moveGhost },
     } = this.baseStore;
 
+    // Pacman
     movePacman();
 
+    const hasPacmanEatenAMagicDot = getHasPacmanEatenAMagicDot({
+      pacmanRow,
+      pacmanCol,
+      grid: GRID,
+    });
+
+    if (hasPacmanEatenAMagicDot) {
+      this.setAllReleasedGhostsMode(GhostMode.Evasive);
+
+      // Set the timer for magic dot effect to wear off
+      this.setGameTimeout(GameTimeouts.EnterBlinkingMode);
+    }
+
+    // For each released ghost
     this.releasedGhosts.forEach((activeGhost) => {
       moveGhost(activeGhost);
 
@@ -117,6 +177,7 @@ export class GameStore {
           case GhostMode.Normal:
             // ghost should eat pacman
             this.doGhostEatPacmanSequence();
+
             break;
           default:
             throw Error(
@@ -205,8 +266,7 @@ export class GameStore {
 
       this.resetSprites();
 
-      // Wait two seconds, then set running flag to false, this will allow the key handler to start the next life
-      this.gameTimeout = setTimeout(() => this.setIsRunning(false), 2000);
+      this.setGameTimeout(GameTimeouts.StartNextLife);
 
       // setReadyText();
     }

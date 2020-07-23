@@ -1,6 +1,7 @@
 import { observable, computed, action } from "mobx";
 import { Direction } from "../../../App.types";
 import { GhostColor, GhostMode, Ghost } from "./Ghost.types";
+import { validateModeSwitch } from "../helpers/validateModeSwitch";
 
 export class GhostStore {
   @observable
@@ -61,7 +62,10 @@ export class GhostStore {
   }
 
   @action
-  setMode = (mode: GhostMode) => {
-    this.mode = mode;
+  setMode = (nextMode: GhostMode) => {
+    if (!validateModeSwitch({ currentMode: this.mode, nextMode })) {
+      return;
+    }
+    this.mode = nextMode;
   };
 }

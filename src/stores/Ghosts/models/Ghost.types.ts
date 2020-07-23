@@ -16,4 +16,5 @@ export enum GhostMode {
   Evasive = "evasive",
   Blinking = "blinking",
   Homing = "homing",
+  Spawning = "spawning",
 }

@@ -1,14 +1,14 @@
-import { observable, action } from "mobx";
+import { observable, action, computed } from "mobx";
 import { GhostStore } from "./models/Ghost.model";
 import { BaseStore } from "../Base/Base.store";
-import { getRandomPossibleDirection } from "./helpers/getRandomPossibleDirection";
+import { getNextDirection } from "./helpers/getNextDirection";
 import { DIRECTIONS_GRID } from "../Game/Game.constants";
 import { Direction } from "../../App.types";
 import {
   GHOST_STEP_INCREMENT,
   GHOST_INITIAL_DATA,
 } from "./models/Ghost.constants";
-import { GhostColor } from "./models/Ghost.types";
+import { GhostColor, GhostMode } from "./models/Ghost.types";
 
 export class GhostsStore {
   @observable
@@ -50,16 +50,10 @@ export class GhostsStore {
       return;
     }
 
-    const direction = getRandomPossibleDirection({
-      col: ghost.column,
-      row: ghost.row,
-      currentDirection: ghost.direction,
-      directionsGrid: DIRECTIONS_GRID,
-    });
+    const nextDirection = getNextDirection(ghost, DIRECTIONS_GRID);
+    this.setDirection(ghost, nextDirection.direction);
 
-    this.setDirection(ghost, direction);
-
-    switch (direction) {
+    switch (nextDirection.direction) {
       case Direction.Left:
         ghost.column = ghost.column - 1;
         ghost.x = ghost.x + GHOST_STEP_INCREMENT;
@@ -77,6 +71,8 @@ export class GhostsStore {
         ghost.y = ghost.y + GHOST_STEP_INCREMENT;
         break;
     }
+
+    ghost.setMode(nextDirection.mode);
   };
 
   @action

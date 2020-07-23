@@ -1,6 +1,7 @@
 import { getOppositeDirection } from "./getOppositeDirection";
 import { getPossibleDirections } from "./getPossibleDirections";
 import { Direction } from "../../../App.types";
+import { GhostMode } from "../models/Ghost.types";
 
 export const getRandomPossibleDirection = (options: {
   row: number;

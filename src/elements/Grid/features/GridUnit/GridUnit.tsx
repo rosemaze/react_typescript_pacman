@@ -1,5 +1,6 @@
 import React from "react";
 // import { Dot } from "./styles/Dot.style";
+import { MagicDot } from "./styles/MagicDot.style";
 import { Wall, BORDER_MARGIN, BORDER_RADIUS } from "./styles/Wall.style";
 import { getBordersAndMargins } from "./helpers/getBordersAndMargins";
 import { GRID } from "../../Grid.constants";
@@ -15,12 +16,13 @@ interface Props {
   id: string;
   isWall: boolean;
   hasDot: boolean;
+  hasMagicDot: boolean;
   rowIndex: number;
   colIndex: number;
 }
 
 const GridUnitComponent: React.FC<Props> = (props) => {
-  const { id, isWall, hasDot, rowIndex, colIndex } = props;
+  const { id, isWall, hasMagicDot, rowIndex, colIndex } = props;
 
   // Maybe move this a helper in the styled component
   const {
@@ -44,7 +46,7 @@ const GridUnitComponent: React.FC<Props> = (props) => {
   const {
     baseStore: { gameStore },
   } = useStores();
-  const { eatenDotIds } = gameStore;
+  // const { eatenDotIds } = gameStore;
 
   /* SLOW: has to render every dot in the path
   const dotState = React.useMemo(
@@ -70,7 +72,9 @@ const GridUnitComponent: React.FC<Props> = (props) => {
       id={`col_${colIndex}_row_${rowIndex}_top_${rowIndex * 15}_left_${
         colIndex * 15
       }`}
-    ></Wall>
+    >
+      {hasMagicDot && <MagicDot id={id} />}
+    </Wall>
   );
 };
 
