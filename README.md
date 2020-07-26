@@ -2,7 +2,7 @@
 
 This project is my own attempt at implementing Pacman in React / Typescript, with hooks, styled components, Mobx, with a emphasis on component driven design.
 
-For animation to work in React, a key challenge is to render as little as possible of the app, namely only the Pacman sprite, or the Ghost sprites when they move, and the dots when they get eaten by Pacman. To achieve this, I used Mobx stores to store all gameplay data, and connected this to the React components, which are wrapped by `observe` via the `reactive` hook, so that they only re-render when the relevant store data changes.
+For animation to work in React, a key challenge is to render as little as possible of the app, namely only the Pacman sprite, or the Ghost sprites when they move, and the dots when they get eaten by Pacman. To achieve this, I used Mobx stores to store all gameplay data, and connected this to the React components, which are wrapped by `observer` via the `reactive` hook, so that the relevant components only re-render when the relevant store data changes.
 
 This React version migrates most of the same data structures and game logic from the jQuery game. Having `Typescript` reduces the amount of time I spent debugging and connecting different parts of the app.
 
