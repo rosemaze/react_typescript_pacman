@@ -1,4 +1,4 @@
-export const GAME_UPDATE_RATE = 130; // milliseconds
+export const GAME_UPDATE_RATE = 170; // milliseconds
 
 // Durations
 export const DURATION_GHOST_EVASIVE = 10000;

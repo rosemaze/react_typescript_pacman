@@ -1,4 +1,4 @@
-import { observable, action, computed } from "mobx";
+import { observable, action } from "mobx";
 import { GhostStore } from "./models/Ghost.model";
 import { BaseStore } from "../Base/Base.store";
 import { getNextDirection } from "./helpers/getNextDirection";
@@ -8,7 +8,7 @@ import {
   GHOST_STEP_INCREMENT,
   GHOST_INITIAL_DATA,
 } from "./models/Ghost.constants";
-import { GhostColor, GhostMode } from "./models/Ghost.types";
+import { GhostColor } from "./models/Ghost.types";
 
 export class GhostsStore {
   @observable
@@ -38,15 +38,13 @@ export class GhostsStore {
   moveGhost = (ghost: GhostStore) => {
     if (ghost.isGoingThroughEndOfLeftTunnel) {
       ghost.column = 27;
-      ghost.x = ghost.column * GHOST_STEP_INCREMENT;
-      console.log("going thru left tunnel");
+      ghost.x = 27 * GHOST_STEP_INCREMENT;
       return;
     }
 
     if (ghost.isGoingThroughEndOfRightTunnel) {
       ghost.column = 0;
-      ghost.x = ghost.column * GHOST_STEP_INCREMENT;
-      console.log("going thru right tunnel");
+      ghost.x = 0 * GHOST_STEP_INCREMENT;
       return;
     }
 
@@ -56,11 +54,11 @@ export class GhostsStore {
     switch (nextDirection.direction) {
       case Direction.Left:
         ghost.column = ghost.column - 1;
-        ghost.x = ghost.x + GHOST_STEP_INCREMENT;
+        ghost.x = ghost.x - GHOST_STEP_INCREMENT;
         break;
       case Direction.Right:
         ghost.column = ghost.column + 1;
-        ghost.x = ghost.x - GHOST_STEP_INCREMENT;
+        ghost.x = ghost.x + GHOST_STEP_INCREMENT;
         break;
       case Direction.Up:
         ghost.row = ghost.row - 1;

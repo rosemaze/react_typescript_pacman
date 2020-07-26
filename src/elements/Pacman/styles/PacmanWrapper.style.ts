@@ -8,7 +8,6 @@ interface Props {
 export const PacmanWrapper = styled.div<Props>`
   background-color: yellow;
   background-size: 20px auto;
-  background-image: url("../../../assets/pacman/pacman-stationary-left.png");
   height: 20px;
   width: 20px;
   left: ${({ x }) => x}px;

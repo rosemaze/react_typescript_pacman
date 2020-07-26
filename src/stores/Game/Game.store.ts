@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, ObservableMap } from "mobx";
 import { createTransformer } from "mobx-utils";
 import { BaseStore } from "../Base/Base.store";
 import { getGridId } from "./helpers/getGridId";
@@ -33,6 +33,9 @@ export class GameStore {
   dots = observable.map<string, boolean>();
 
   @observable
+  magicDots: ObservableMap<string, boolean> = new ObservableMap();
+
+  @observable
   eatenDotIds = observable.array<string>();
 
   @observable
@@ -45,8 +48,11 @@ export class GameStore {
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
+
+    this.magicDots.set("1_3", true); // col_row
   }
 
+  @action
   @action
   startGame = () => {
     if (this.isRunning) {
@@ -92,7 +98,6 @@ export class GameStore {
       case GameTimeouts.EnterBlinkingMode:
         // Set ghosts to blinking once evasive duration is up, set timer for ghosts to exit evasive mode altogether
         this.gameTimeout = setTimeout(() => {
-          console.log("hey");
           this.setAllReleasedGhostsMode(GhostMode.Blinking);
           this.setGameTimeout(GameTimeouts.ExitEvasiveMode);
         }, DURATION_GHOST_EVASIVE);
@@ -142,6 +147,10 @@ export class GameStore {
       pacmanCol,
       grid: GRID,
     });
+    if (this.magicDots.get(pacmanCol + "_" + pacmanRow)) {
+      console.log("we are here");
+      this.magicDots.set(pacmanCol + "_" + pacmanRow, false);
+    }
 
     if (hasPacmanEatenAMagicDot) {
       this.setAllReleasedGhostsMode(GhostMode.Evasive);
@@ -171,6 +180,7 @@ export class GameStore {
 
             break;
           case GhostMode.Homing:
+          case GhostMode.Spawning:
             // pacman should just pass through ghost
             // do nothing
             break;
@@ -181,7 +191,7 @@ export class GameStore {
             break;
           default:
             throw Error(
-              "Unhandled ghost mode. todo: implement exhaustive check"
+              `Unhandled ghost mode.${activeGhost.mode} todo: implement exhaustive check`
             );
         }
       }
@@ -223,6 +233,13 @@ export class GameStore {
     const dot = this.dots.get(coord);
 
     return !!dot;
+  });
+
+  @action
+  getMagicDot = createTransformer((coord: string) => {
+    const magicDot = this.magicDots.get(coord);
+
+    return magicDot;
   });
 
   @action

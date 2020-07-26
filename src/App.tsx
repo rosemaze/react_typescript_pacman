@@ -52,11 +52,11 @@ function App() {
       <GameWrapper>
         <GridWrapper>
           <Grid />
-          <Pacman />
           <Ghost ghost={ghostRed} />
           <Ghost ghost={ghostPink} />
           <Ghost ghost={ghostBlue} />
           <Ghost ghost={ghostOrange} />
+          <Pacman />
         </GridWrapper>
         <Stats />
       </GameWrapper>

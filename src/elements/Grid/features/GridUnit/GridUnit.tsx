@@ -1,11 +1,11 @@
 import React from "react";
 // import { Dot } from "./styles/Dot.style";
-import { MagicDot } from "./styles/MagicDot.style";
 import { Wall, BORDER_MARGIN, BORDER_RADIUS } from "./styles/Wall.style";
 import { getBordersAndMargins } from "./helpers/getBordersAndMargins";
 import { GRID } from "../../Grid.constants";
 import { useStores } from "../../../../hooks/useStores";
 import { reactive } from "../../../../helpers/reactive";
+import { MagicDot } from "../MagicDot/MagicDot";
 
 enum DotState {
   Eaten = "eaten",
@@ -55,6 +55,8 @@ const GridUnitComponent: React.FC<Props> = (props) => {
   );
   */
 
+  const { getMagicDot } = gameStore;
+
   return (
     <Wall
       marginLeft={marginLeft}
@@ -73,7 +75,7 @@ const GridUnitComponent: React.FC<Props> = (props) => {
         colIndex * 15
       }`}
     >
-      {hasMagicDot && <MagicDot id={id} />}
+      {hasMagicDot && <MagicDot rowIndex={rowIndex} colIndex={colIndex} />}
     </Wall>
   );
 };
