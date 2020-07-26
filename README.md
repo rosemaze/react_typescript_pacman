@@ -1,3 +1,26 @@
+## About
+
+This project is my own attempt at implementing Pacman in React / Typescript.
+
+The game logic and implementation concepts are largely the same as the jQuery Pacman project.
+
+In contrast to the jQuery implementation, I think this React version has much more maintainable code.
+
+## Advantages of React / Typescript over jQuery version
+
+- Separation of game play logic and rendering logic. Gameplay logic have now been moved entirely to the `stores` folder, and rendering logic belongs in the `elements` folder. Components are only updated when the store has changed. In the jQuery verison, all this logic belonged in the same file, and everytime the UI had to be updated by `document.getElementById` which made it difficult to visualise or trace what was happening when a game was in progress.
+
+- Separate stores for `Game`, `Pacman` and `Ghost`. In the jQuery verison this was all mixed together and that resulted in difficulty locating bugs and isolating problems. For example, in the `Ghost` store I have one place which handles validation and switching of different `Ghost` modes. By encapsulating the behaviour of the `Ghost` and not allowing other stores to modify it directly, it eliminated bugs caused by the possibility of switching to the wrong state.
+
+- Complex algorithms for moving the sprites are located in helper functions within `helpers` folders.
+
+## Disadvantages yet to be addressed in this React version
+
+- The dots that Pacman should eat have not been implemented.
+- User key press handling is less responsive than the jQuery version, resulting in less fun playing the game
+
+## Technology
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
