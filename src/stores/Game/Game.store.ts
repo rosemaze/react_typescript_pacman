@@ -148,7 +148,7 @@ export class GameStore {
       grid: GRID,
     });
     if (this.magicDots.get(pacmanCol + "_" + pacmanRow)) {
-      console.log("we are here");
+      console.log("we are here setting dot to", pacmanCol + "_" + pacmanRow);
       this.magicDots.set(pacmanCol + "_" + pacmanRow, false);
     }
 

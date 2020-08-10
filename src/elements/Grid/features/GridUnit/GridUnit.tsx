@@ -55,7 +55,14 @@ const GridUnitComponent: React.FC<Props> = (props) => {
   );
   */
 
-  const { getMagicDot } = gameStore;
+  const { getMagicDot, magicDots } = gameStore;
+
+  React.useEffect(() => {
+    console.log("heydiho");
+  }, [getMagicDot, magicDots]);
+
+  const hasMagicDot2 = getMagicDot(colIndex + "_" + rowIndex);
+  console.log(hasMagicDot2, colIndex + "_" + rowIndex);
 
   return (
     <Wall
@@ -75,7 +82,7 @@ const GridUnitComponent: React.FC<Props> = (props) => {
         colIndex * 15
       }`}
     >
-      {hasMagicDot && <MagicDot rowIndex={rowIndex} colIndex={colIndex} />}
+      {hasMagicDot2 && <MagicDot rowIndex={rowIndex} colIndex={colIndex} />}
     </Wall>
   );
 };
