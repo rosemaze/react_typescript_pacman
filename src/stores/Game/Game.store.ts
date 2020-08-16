@@ -1,6 +1,7 @@
 import { observable, action, ObservableMap } from "mobx";
 import { createTransformer } from "mobx-utils";
 import { BaseStore } from "../Base/Base.store";
+import { getCoord } from "./helpers/getCoord";
 import { getGridId } from "./helpers/getGridId";
 import { getHasPacmanEatenAMagicDot } from "./helpers/getHasPacmanEatenAMagicDot";
 import { getIsGhostAndPacmanInContact } from "./helpers/getIsGhostAndPacmanInContact";
@@ -14,9 +15,10 @@ import {
   GAME_UPDATE_RATE,
   DURATION_GHOST_EVASIVE,
   DURATION_GHOST_BLINKING,
+  DURATION_SPRITE_INVISIBLE,
 } from "./Game.constants";
 import { GHOST_INITIAL_DATA } from "../Ghosts/models/Ghost.constants";
-import { GRID } from "../../elements/Grid/Grid.constants";
+import { GRID, GridValues } from "../../elements/Grid/Grid.constants";
 import { GameTimeouts } from "./Game.types";
 
 export class GameStore {
@@ -30,29 +32,31 @@ export class GameStore {
   userLivesRemaining: number = 2;
 
   @observable
-  dots = observable.map<string, boolean>();
+  dots: ObservableMap<string, boolean> = new ObservableMap();
 
   @observable
   magicDots: ObservableMap<string, boolean> = new ObservableMap();
 
   @observable
-  eatenDotIds = observable.array<string>();
-
-  @observable
   releasedGhosts = observable.array<GhostStore>();
-
   @observable
   gameTimeout?: number; // Use to set game to next round, set timer for ghosts in evasive mode
 
+  @observable
   baseStore: BaseStore;
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
 
-    this.magicDots.set("1_3", true); // col_row
+    GRID.forEach((row, rowIndex) => {
+      row.forEach((col, colIndex) => {
+        if (col === GridValues.DOT || col === GridValues.MAGIC_DOT) {
+          this.dots.set(getCoord({ rowIndex, colIndex }), true);
+        }
+      });
+    });
   }
 
-  @action
   @action
   startGame = () => {
     if (this.isRunning) {
@@ -142,21 +146,21 @@ export class GameStore {
     // Pacman
     movePacman();
 
+    // Pacman has eaten a dot
+    if (this.dots.get(pacmanCol + "_" + pacmanRow)) {
+      this.dots.set(pacmanCol + "_" + pacmanRow, false);
+    }
+
     const hasPacmanEatenAMagicDot = getHasPacmanEatenAMagicDot({
       pacmanRow,
       pacmanCol,
       grid: GRID,
     });
-    if (this.magicDots.get(pacmanCol + "_" + pacmanRow)) {
-      console.log("we are here setting dot to", pacmanCol + "_" + pacmanRow);
-      this.magicDots.set(pacmanCol + "_" + pacmanRow, false);
-    }
-
     if (hasPacmanEatenAMagicDot) {
       this.setAllReleasedGhostsMode(GhostMode.Evasive);
 
       // Set the timer for magic dot effect to wear off
-      this.setGameTimeout(GameTimeouts.EnterBlinkingMode);
+      // this.setGameTimeout(GameTimeouts.EnterBlinkingMode);
     }
 
     // For each released ghost
@@ -196,11 +200,6 @@ export class GameStore {
         }
       }
     });
-
-    // THIS IS SLOW CUZ IT RENDERS THE ENTIRE PATH MAP
-    const { row, column } = this.baseStore.pacmanStore;
-
-    this.eatenDotIds.push(getGridId({ colIndex: column, rowIndex: row }));
   };
 
   @action
@@ -212,7 +211,6 @@ export class GameStore {
     // gEatenGhostsCount++;
     // updateScore(POINTS_FOR_GHOST[gEatenGhostsCount]);
 
-    // Hide pacman and ghost when eaten
     // setPacmanDivClassName("invisible");
     // setEatenSpriteScore(curGhostObj.id, POINTS_FOR_GHOST[gEatenGhostsCount]);
 
@@ -220,12 +218,13 @@ export class GameStore {
     ghost.setMode(GhostMode.Homing);
 
     //// Set pacman to visible
+    // this.baseStore.pacmanStore.setIsVisible(true);
     //setPacmanDivClassName(
     //  KEY_NUMBER_TO_WORD[sprites.pacman.currentDirection]
     //);
 
-    // Resume game after 1 second pause
-    setTimeout(this.setUpdateGameInterval, 1000);
+    // Resume game after 1.5 second pause
+    setTimeout(this.setUpdateGameInterval, DURATION_SPRITE_INVISIBLE);
   };
 
   @action

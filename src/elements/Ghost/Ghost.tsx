@@ -56,6 +56,7 @@ export const GhostComponent: React.FC<Props> = (props) => {
           case GhostColor.Orange:
             return ghostOrangeLeft;
         }
+        break;
       case Direction.Right:
         switch (ghost.color) {
           case GhostColor.Red:
@@ -67,6 +68,7 @@ export const GhostComponent: React.FC<Props> = (props) => {
           case GhostColor.Orange:
             return ghostOrangeRight;
         }
+        break;
       case Direction.Down:
         switch (ghost.color) {
           case GhostColor.Red:
@@ -78,6 +80,7 @@ export const GhostComponent: React.FC<Props> = (props) => {
           case GhostColor.Orange:
             return ghostOrangeDown;
         }
+        break;
       case Direction.Up:
         switch (ghost.color) {
           case GhostColor.Red:
@@ -90,11 +93,11 @@ export const GhostComponent: React.FC<Props> = (props) => {
             return ghostOrangeUp;
         }
     }
-  }, [ghost.direction]);
+  }, [ghost.direction, ghost.color, ghost.mode]);
 
   return (
-    <GhostWrapper x={ghost.x} y={ghost.y}>
-      <img src={animation} width={20} height={20} />
+    <GhostWrapper x={ghost.x} y={ghost.y} isVisible={ghost.isVisible}>
+      <img src={animation} width={20} height={20} alt="ghost" />
     </GhostWrapper>
   );
 };

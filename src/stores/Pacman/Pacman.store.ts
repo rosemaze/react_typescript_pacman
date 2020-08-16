@@ -1,6 +1,7 @@
 import { observable, action, computed } from "mobx";
 import { Direction } from "../../App.types";
 import { PACMAN_STEP_INCREMENT } from "./Pacman.constants";
+import { DURATION_SPRITE_INVISIBLE } from "../Game/Game.constants";
 import { getPacmanNextPosition } from "./helpers/getPacmanNextPosition";
 import { BaseStore } from "../Base/Base.store";
 import { Pacman } from "./Pacman.types";
@@ -25,6 +26,12 @@ export class PacmanStore {
   previousDirection: Direction = Direction.Left;
 
   @observable
+  isVisible: boolean = true;
+
+  @observable
+  isVisibleTimeout?: number;
+
+  @observable
   baseStore: BaseStore;
 
   constructor(baseStore: BaseStore, initialData: Pacman) {
@@ -41,6 +48,7 @@ export class PacmanStore {
     this.row = initialData.row;
     this.direction = initialData.direction;
     this.previousDirection = initialData.previousDirection;
+    this.isVisibleTimeout = undefined;
   };
 
   @action
@@ -117,4 +125,16 @@ export class PacmanStore {
       this.direction === Direction.Right
     );
   }
+
+  @action
+  setIsVisibleTimeout = () => {
+    // Hide pacman
+    this.isVisible = false;
+    clearTimeout(this.isVisibleTimeout);
+
+    // Show pacman after interval
+    this.isVisibleTimeout = setTimeout(() => {
+      this.isVisible = true;
+    }, DURATION_SPRITE_INVISIBLE);
+  };
 }

@@ -8,8 +8,6 @@ export const Grid: React.FC = () => {
     <>
       {GRID.map((row, rowIndex) => {
         let isWall = false;
-        let hasDot = false;
-        let hasMagicDot = false;
 
         return row.map((col, colIndex) => {
           isWall = [
@@ -20,16 +18,11 @@ export const Grid: React.FC = () => {
             GridValues.WALL_TOP_RIGHT_BORDER,
           ].includes(col);
 
-          hasDot = [GridValues.DOT].includes(col);
-          hasMagicDot = [GridValues.MAGIC_DOT].includes(col);
-
           return (
             <GridUnit
               isWall={isWall}
               rowIndex={rowIndex}
               colIndex={colIndex}
-              hasDot={hasDot}
-              hasMagicDot={hasMagicDot}
               id={getGridId({ colIndex, rowIndex })}
             />
           );

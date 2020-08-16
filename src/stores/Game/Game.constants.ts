@@ -4,6 +4,7 @@ export const GAME_UPDATE_RATE = 170; // milliseconds
 export const DURATION_GHOST_EVASIVE = 10000;
 export const DURATION_GHOST_BLINKING = 6000;
 export const DURATION_GHOST_SPAWNING = 6000;
+export const DURATION_SPRITE_INVISIBLE = 1500;
 
 export const paths =
   // 0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27

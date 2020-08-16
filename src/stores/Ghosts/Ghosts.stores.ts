@@ -28,10 +28,26 @@ export class GhostsStore {
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
-    this.ghostRed = new GhostStore(GhostColor.Red, GHOST_INITIAL_DATA);
-    this.ghostPink = new GhostStore(GhostColor.Pink, GHOST_INITIAL_DATA);
-    this.ghostBlue = new GhostStore(GhostColor.Blue, GHOST_INITIAL_DATA);
-    this.ghostOrange = new GhostStore(GhostColor.Orange, GHOST_INITIAL_DATA);
+    this.ghostRed = new GhostStore(
+      this.baseStore,
+      GhostColor.Red,
+      GHOST_INITIAL_DATA
+    );
+    this.ghostPink = new GhostStore(
+      this.baseStore,
+      GhostColor.Pink,
+      GHOST_INITIAL_DATA
+    );
+    this.ghostBlue = new GhostStore(
+      this.baseStore,
+      GhostColor.Blue,
+      GHOST_INITIAL_DATA
+    );
+    this.ghostOrange = new GhostStore(
+      this.baseStore,
+      GhostColor.Orange,
+      GHOST_INITIAL_DATA
+    );
   }
 
   @action

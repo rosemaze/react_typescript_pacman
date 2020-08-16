@@ -2,6 +2,12 @@ import { observable, computed, action } from "mobx";
 import { Direction } from "../../../App.types";
 import { GhostColor, GhostMode, Ghost } from "./Ghost.types";
 import { validateModeSwitch } from "../helpers/validateModeSwitch";
+import {
+  DURATION_SPRITE_INVISIBLE,
+  DURATION_GHOST_EVASIVE,
+  DURATION_GHOST_BLINKING,
+} from "../../Game/Game.constants";
+import { BaseStore } from "../../Base/Base.store";
 
 export class GhostStore {
   @observable
@@ -25,11 +31,22 @@ export class GhostStore {
   color: GhostColor;
 
   @observable
+  isVisible: boolean = true;
+
+  @observable
   releaseTimeout?: number = undefined;
 
-  constructor(color: GhostColor, initialData: Ghost) {
-    this.color = color;
+  @observable
+  invisibleTimeout?: number = undefined;
 
+  @observable
+  evasiveTimeout?: number = undefined;
+
+  baseStore: BaseStore; // Does this need to be observable
+
+  constructor(baseStore: BaseStore, color: GhostColor, initialData: Ghost) {
+    this.color = color;
+    this.baseStore = baseStore;
     this.setInitialData(initialData);
   }
 
@@ -43,6 +60,8 @@ export class GhostStore {
     this.mode = initialData.mode;
 
     this.releaseTimeout = undefined;
+    this.invisibleTimeout = undefined;
+    this.evasiveTimeout = undefined;
   };
 
   @computed
@@ -66,6 +85,34 @@ export class GhostStore {
     if (!validateModeSwitch({ currentMode: this.mode, nextMode })) {
       return;
     }
+
+    if (nextMode === GhostMode.Homing) {
+      // Hide ghost and pacman if it was eaten
+      this.isVisible = false;
+      this.baseStore.pacmanStore.setIsVisibleTimeout();
+
+      clearTimeout(this.invisibleTimeout);
+
+      // Set ghost and pacman back to visible after 2.5 secs
+      this.invisibleTimeout = setTimeout(() => {
+        this.isVisible = true;
+      }, DURATION_SPRITE_INVISIBLE);
+    } else if (nextMode === GhostMode.Evasive) {
+      // Prolong evasive period if a magic pill was eaten
+      clearTimeout(this.evasiveTimeout);
+
+      this.evasiveTimeout = setTimeout(() => {
+        this.mode = GhostMode.Blinking;
+      }, DURATION_GHOST_EVASIVE);
+    } else if (nextMode === GhostMode.Blinking) {
+      // Set ghost eventually back to normal if it is already blinking
+      clearTimeout(this.evasiveTimeout);
+
+      this.evasiveTimeout = setTimeout(() => {
+        this.mode = GhostMode.Normal;
+      }, DURATION_GHOST_BLINKING);
+    }
+
     this.mode = nextMode;
   };
 }

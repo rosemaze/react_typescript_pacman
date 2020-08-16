@@ -25,13 +25,13 @@ export const validateModeSwitch = (options: {
           // NOT ALLOWED
           return false;
       }
-      break;
 
+    // eslint-disable-next-line no-fallthrough
     case GhostMode.Evasive:
       switch (currentMode) {
         case GhostMode.Blinking:
-          // NOT ALLOWED
-          return false;
+          // If another magic dot was eaten in the mean time reenter evasive state
+          return true;
         case GhostMode.Normal:
           // Normal ghost will turn evasive if pacman eats a magic dot
           return true;
@@ -39,13 +39,14 @@ export const validateModeSwitch = (options: {
           // NOT ALLOWED
           return false;
         case GhostMode.Evasive:
-          // no need to do anything
-          return false;
+          // If another magic dot was eaten in the mean time we need to prolong the evasive period
+          return true;
         case GhostMode.Spawning:
           // NOT ALLOWED
           return false;
       }
 
+    // eslint-disable-next-line no-fallthrough
     case GhostMode.Homing:
       switch (currentMode) {
         case GhostMode.Blinking:
@@ -65,6 +66,7 @@ export const validateModeSwitch = (options: {
           return false;
       }
 
+    // eslint-disable-next-line no-fallthrough
     case GhostMode.Normal:
       switch (currentMode) {
         case GhostMode.Blinking:
@@ -84,6 +86,7 @@ export const validateModeSwitch = (options: {
           return true;
       }
 
+    // eslint-disable-next-line no-fallthrough
     case GhostMode.Spawning:
       switch (currentMode) {
         case GhostMode.Blinking:
@@ -103,6 +106,7 @@ export const validateModeSwitch = (options: {
           return false;
       }
 
+    // eslint-disable-next-line no-fallthrough
     default:
       return false;
   }

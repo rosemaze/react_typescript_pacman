@@ -2,27 +2,23 @@ import React from "react";
 // import { Dot } from "./styles/Dot.style";
 import { Wall, BORDER_MARGIN, BORDER_RADIUS } from "./styles/Wall.style";
 import { getBordersAndMargins } from "./helpers/getBordersAndMargins";
-import { GRID } from "../../Grid.constants";
+import { GRID, MAGIC_DOTS_COORDS } from "../../Grid.constants";
 import { useStores } from "../../../../hooks/useStores";
 import { reactive } from "../../../../helpers/reactive";
-import { MagicDot } from "../MagicDot/MagicDot";
-
-enum DotState {
-  Eaten = "eaten",
-  Uneaten = "uneaten",
-}
+import { Dot } from "../Dot/Dot";
+import { getCoord } from "../../../../stores/Game/helpers/getCoord";
 
 interface Props {
   id: string;
   isWall: boolean;
-  hasDot: boolean;
-  hasMagicDot: boolean;
+  // hasDot: boolean;
+  // hasMagicDot: boolean;
   rowIndex: number;
   colIndex: number;
 }
 
 const GridUnitComponent: React.FC<Props> = (props) => {
-  const { id, isWall, hasMagicDot, rowIndex, colIndex } = props;
+  const { isWall, rowIndex, colIndex } = props;
 
   // Maybe move this a helper in the styled component
   const {
@@ -46,23 +42,13 @@ const GridUnitComponent: React.FC<Props> = (props) => {
   const {
     baseStore: { gameStore },
   } = useStores();
-  // const { eatenDotIds } = gameStore;
 
-  /* SLOW: has to render every dot in the path
-  const dotState = React.useMemo(
-    () => (eatenDotIds.includes(id) ? DotState.Eaten : DotState.Uneaten),
-    [eatenDotIds.length, id]
-  );
-  */
+  const { dots } = gameStore;
 
-  const { getMagicDot, magicDots } = gameStore;
+  const coord = getCoord({ colIndex, rowIndex });
+  const hasDot = dots.get(coord) === true;
 
-  React.useEffect(() => {
-    console.log("heydiho");
-  }, [getMagicDot, magicDots]);
-
-  const hasMagicDot2 = getMagicDot(colIndex + "_" + rowIndex);
-  console.log(hasMagicDot2, colIndex + "_" + rowIndex);
+  const isMagicDot = MAGIC_DOTS_COORDS.includes(coord);
 
   return (
     <Wall
@@ -82,11 +68,9 @@ const GridUnitComponent: React.FC<Props> = (props) => {
         colIndex * 15
       }`}
     >
-      {hasMagicDot2 && <MagicDot rowIndex={rowIndex} colIndex={colIndex} />}
+      {hasDot && <Dot isMagicDot={isMagicDot} />}
     </Wall>
   );
 };
 
 export const GridUnit = reactive(GridUnitComponent);
-
-//// {dotState === DotState.Uneaten && <Dot id={id} />}

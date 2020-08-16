@@ -12,7 +12,7 @@ export const PacmanComponent: React.FC = () => {
   const {
     baseStore: { pacmanStore },
   } = useStores();
-  const { x, y, direction } = pacmanStore;
+  const { x, y, direction, isVisible } = pacmanStore;
 
   const animation = React.useMemo(() => {
     switch (direction) {
@@ -28,8 +28,8 @@ export const PacmanComponent: React.FC = () => {
   }, [direction]);
 
   return (
-    <PacmanWrapper x={x} y={y}>
-      <img src={animation} width={20} height={20} />
+    <PacmanWrapper x={x} y={y} isVisible={isVisible}>
+      <img src={animation} width={20} height={20} alt="pacman" />
     </PacmanWrapper>
   );
 };
