@@ -16,7 +16,7 @@ This React version migrates most of the same data structures and game logic from
 
 ## WIP
 
-- The dots that Pacman should eat have not been implemented. I need to look into using dynamic keys in a Mobx observable map so that only the specific object (each dot) gets rerendered instead of all the dots each time Pacman eats one dot.
+- ~The dots that Pacman should eat have not been implemented. I need to look into using dynamic keys in a Mobx observable map so that only the specific object (each dot) gets rerendered instead of all the dots each time Pacman eats one dot.~ Solved with `Observable Maps`
 
 ## Disadvantages to be addressed in this React version
 
